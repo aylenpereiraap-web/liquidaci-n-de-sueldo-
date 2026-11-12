@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánto Me Queda? · Sueldo y Boleta de Honorarios 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg1:#10B981; --bg2:#059669; --bg3:#FBBF24;
+    --card:#FFFFFF; --card2:#F2FBF6;
+    --ink:#17261D; --ink-soft:#49594E; --muted:#7E9086;
+    --primary:#059669; --primary-dark:#064E3B;
+    --amber:#F59E0B; --amber-dark:#92400E;
+    --sky:#0EA5E9; --sky-dark:#075985;
+    --success:#22C55E; --success-dark:#15803D;
+    --danger:#EF4444; --danger-dark:#A91E1E;
+    --border:#D7F0E1;
+    --font-display:'Baloo 2', sans-serif;
+    --font-body:'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono:'JetBrains Mono', 'Courier New', monospace;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ height:100%; }
+  body{
+    font-family:var(--font-body);
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 15% 8%, rgba(251,191,36,.45), transparent 42%),
+      radial-gradient(circle at 92% 12%, rgba(14,165,233,.35), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(5,150,105,.55), transparent 55%),
+      linear-gradient(150deg, var(--bg1) 0%, var(--bg2) 55%, #043F31 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px; overflow-x:hidden; position:relative;
+  }
+  ::selection{ background:var(--amber); color:#2b1700; }
+  button{ font-family:inherit; cursor:pointer; }
+  button:focus-visible{ outline:3px solid #fff; outline-offset:2px; }
+  .hidden{ display:none !important; }
+
+  /* ---------- floating 3D decor: monedas, billetes, porcentajes ---------- */
+  .floaters{ position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .float-shape{ position:absolute; opacity:.92; filter:drop-shadow(0 14px 18px rgba(4,40,30,.3)); display:flex; align-items:center; justify-content:center; }
+  .fs-coin{ border-radius:50%; background:radial-gradient(circle at 32% 28%, #FFF6D8, var(--amber) 55%, var(--amber-dark) 100%); box-shadow:inset 0 -4px 6px rgba(120,70,0,.35), inset 0 3px 4px rgba(255,255,255,.5); }
+  .fs-coin span{ font-family:var(--font-display); font-weight:800; color:#6B3F00; }
+  .fs-bill{ border-radius:9px; background:linear-gradient(135deg, #6EE7B7, var(--primary) 58%, var(--primary-dark)); position:relative; box-shadow:inset 0 2px 3px rgba(255,255,255,.4); }
+  .fs-bill::after{ content:''; position:absolute; inset:22%; border:1.5px dashed rgba(255,255,255,.55); border-radius:50%; }
+  .fs-badge{ border-radius:50%; background:radial-gradient(circle at 32% 28%, #D6F3FF, var(--sky) 55%, var(--sky-dark) 100%); box-shadow:inset 0 -3px 5px rgba(5,60,80,.3), inset 0 3px 4px rgba(255,255,255,.5); }
+  .fs-badge span{ font-family:var(--font-display); font-weight:800; color:#05303F; }
+  .f1{ width:52px; height:52px; top:8%; left:6%; animation:floatA 9s ease-in-out infinite; }
+  .f1 span{ font-size:22px; }
+  .f2{ width:42px; height:30px; top:68%; left:4%; animation:floatB 7.5s ease-in-out infinite; }
+  .f3{ width:40px; height:40px; top:14%; right:7%; animation:floatC 10.5s ease-in-out infinite; }
+  .f3 span{ font-size:17px; }
+  .f4{ width:36px; height:36px; top:78%; right:10%; animation:floatA 8.5s ease-in-out infinite; }
+  .f4 span{ font-size:16px; }
+  .f5{ width:34px; height:24px; top:42%; right:3%; animation:floatB 6.8s ease-in-out infinite; }
+  .f6{ width:34px; height:34px; top:35%; left:2.5%; animation:floatC 9.2s ease-in-out infinite; }
+  .f6 span{ font-size:15px; }
+  @keyframes floatA{ 0%,100%{ transform:translateY(0) rotate(0deg);} 50%{ transform:translateY(-22px) rotate(14deg);} }
+  @keyframes floatB{ 0%,100%{ transform:translateY(0) rotate(0deg);} 50%{ transform:translateY(18px) rotate(-12deg);} }
+  @keyframes floatC{ 0%,100%{ transform:translateY(0) scale(1);} 50%{ transform:translateY(-14px) scale(1.08);} }
+  @media (max-width:720px){ .floaters{ display:none; } }
+
+  .app{ width:100%; max-width:760px; position:relative; z-index:1; }
+
+  /* ---------- 3D button system ---------- */
+  .btn-3d{
+    font-family:var(--font-display); font-weight:700; border:none; border-radius:14px;
+    color:#fff; background:var(--primary);
+    box-shadow:0 6px 0 var(--primary-dark), 0 14px 22px -8px rgba(4,40,30,.45);
+    transform:translateY(0); transition:transform .08s ease, box-shadow .08s ease, filter .15s ease;
+    padding:15px 30px; font-size:16px; letter-spacing:.01em;
+  }
+  .btn-3d:hover{ filter:brightness(1.07); }
+  .btn-3d:active{ transform:translateY(6px); box-shadow:0 0 0 var(--primary-dark), 0 6px 12px -6px rgba(4,40,30,.4); }
+  .btn-3d:disabled{ opacity:.5; cursor:default; filter:none; }
+  .btn-3d.amber{ background:var(--amber); box-shadow:0 6px 0 var(--amber-dark), 0 14px 22px -8px rgba(92,51,0,.4); }
+  .btn-3d.sky{ background:var(--sky); box-shadow:0 6px 0 var(--sky-dark), 0 14px 22px -8px rgba(7,89,133,.4); }
+  .btn-3d.ghost{ background:var(--card); color:var(--primary); box-shadow:0 6px 0 var(--border), 0 14px 22px -8px rgba(4,40,30,.18); }
+
+  /* ---------- topbar ---------- */
+  .topbar{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:16px; flex-wrap:wrap; }
+  .brand-chip{ display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.16); border:1.5px solid rgba(255,255,255,.35); backdrop-filter:blur(6px); border-radius:14px; padding:9px 16px; }
+  .brand-chip .dot3d{ width:14px; height:14px; border-radius:50%; background:radial-gradient(circle at 32% 28%, #fff, var(--amber) 60%, var(--amber-dark)); box-shadow:0 2px 4px rgba(0,0,0,.25); flex-shrink:0; }
+  .brand-chip b{ font-family:var(--font-display); font-weight:700; color:#fff; font-size:14.5px; letter-spacing:.01em; }
+  .stat-row{ display:flex; gap:10px; }
+  .stat-pill{ background:rgba(255,255,255,.95); border-radius:12px; padding:8px 14px; display:flex; align-items:center; gap:7px; box-shadow:0 5px 0 rgba(4,40,30,.18), 0 10px 16px -8px rgba(4,30,22,.3); }
+  .stat-pill svg{ width:15px; height:15px; color:var(--amber-dark); }
+  .stat-pill span{ font-family:var(--font-mono); font-weight:700; font-size:14px; color:var(--ink); }
+
+  /* ---------- card ---------- */
+  .card{
+    background:var(--card); border-radius:24px; padding:36px;
+    box-shadow:0 10px 0 #CDEBDB, 0 26px 50px -18px rgba(6,30,22,.5);
+    position:relative; overflow:hidden;
+  }
+  .card::before{ content:''; position:absolute; top:0; left:0; right:0; height:7px; background:linear-gradient(90deg, var(--sky), var(--primary), var(--amber), #34D399); }
+
+  /* ---------- START ---------- */
+  .start-screen{ text-align:center; padding:10px 4px 2px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:7px; font-family:var(--font-display); font-weight:700;
+    font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--primary-dark);
+    background:#DEF7E9; border:1.5px solid #BBEDCE; padding:7px 16px; border-radius:99px; margin-bottom:20px;
+  }
+  h1.title{ font-family:var(--font-display); font-weight:800; font-size:clamp(26px,5.2vw,40px); line-height:1.12; margin-bottom:12px; color:var(--ink); }
+  .title-accent{ color:var(--primary); }
+  .subtitle{ color:var(--ink-soft); font-size:15.5px; max-width:500px; margin:0 auto 28px; line-height:1.6; }
+  .rules{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:30px; }
+  .rule-item{ background:var(--card2); border:1.5px solid var(--border); border-radius:16px; padding:18px 10px; box-shadow:0 4px 0 var(--border); }
+  .rule-item .ric{ font-size:24px; display:block; margin-bottom:8px; }
+  .rule-item b{ color:var(--ink); display:block; font-size:13.5px; margin-bottom:2px; font-family:var(--font-display); font-weight:700; }
+  .rule-item span.sub{ font-size:11.5px; color:var(--muted); }
+  .start-foot{ margin-top:18px; font-size:12.5px; color:var(--muted); font-family:var(--font-mono); }
+  .start-credit{ margin-top:6px; font-size:11.5px; color:var(--muted); opacity:.8; }
+
+  /* ---------- ROUND / DICE SCREEN ---------- */
+  .round-screen{ text-align:center; padding:4px; }
+  .round-badge{ font-family:var(--font-mono); font-size:12.5px; color:var(--primary-dark); background:#DEF7E9; border:1.5px solid #BBEDCE; display:inline-block; padding:6px 16px; border-radius:99px; margin-bottom:22px; letter-spacing:.04em; }
+  .die-stage{ perspective:700px; width:120px; height:120px; margin:0 auto 26px; }
+  .die{ width:100%; height:100%; position:relative; transform-style:preserve-3d; transform:rotateX(0deg) rotateY(0deg); }
+  .die-face{
+    position:absolute; inset:0; background:linear-gradient(160deg, #ffffff, #E7F7EE);
+    border-radius:18px; border:2px solid #BBEDCE;
+    display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+    padding:16px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.6), 0 2px 10px rgba(5,70,45,.15);
+  }
+  .die-face .pip{ width:16px; height:16px; border-radius:50%; background:radial-gradient(circle at 32% 28%, #5CD9A2, var(--primary) 60%, var(--primary-dark)); margin:auto; box-shadow:0 2px 3px rgba(0,0,0,.25); }
+  .face-front{ transform:rotateY(0deg) translateZ(60px); }
+  .face-back{ transform:rotateY(180deg) translateZ(60px); }
+  .face-right{ transform:rotateY(90deg) translateZ(60px); }
+  .face-left{ transform:rotateY(-90deg) translateZ(60px); }
+  .face-top{ transform:rotateX(90deg) translateZ(60px); }
+  .face-bottom{ transform:rotateX(-90deg) translateZ(60px); }
+  .dice-label{ font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:18px; }
+  .dice-pool-note{ font-family:var(--font-mono); font-size:11.5px; color:var(--muted); margin-top:14px; }
+  .reveal-card{
+    margin-top:22px; background:linear-gradient(160deg, #FFF7E6, #FFEBC2); border:2px solid #FBD58A; border-radius:18px;
+    padding:18px 20px; box-shadow:0 6px 0 #EFC472, 0 14px 20px -10px rgba(146,100,14,.3);
+    opacity:0; transform:translateY(10px) scale(.96);
+  }
+  .reveal-card.show{ animation:revealPop .5s cubic-bezier(.22,1.1,.3,1.2) forwards; }
+  @keyframes revealPop{ to{ opacity:1; transform:translateY(0) scale(1); } }
+  .reveal-label{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--amber-dark); margin-bottom:4px; }
+  .reveal-name{ font-family:var(--font-display); font-weight:800; font-size:clamp(20px,4vw,26px); color:#5B3A00; }
+  .round-actions{ margin-top:26px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+  .round-toast{
+    margin-top:18px; background:#EAFBF1; border:1.5px solid #A8E9C2; border-radius:14px; padding:12px 16px;
+    font-family:var(--font-mono); font-size:12px; color:var(--success-dark); opacity:0; transform:translateY(6px);
+  }
+  .round-toast.show{ animation:revealPop .4s ease forwards; }
+
+  /* ---------- QUESTION SCREEN ---------- */
+  .qtop{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:22px; flex-wrap:wrap; }
+  .cat-chip{
+    display:inline-flex; align-items:center; gap:7px; padding:7px 14px; border-radius:10px;
+    font-size:12px; font-weight:700; font-family:var(--font-display);
+    color:var(--sky-dark); background:#E3F6FF; border:1.5px solid #BFE9FB;
+  }
+  .cat-chip.liquidacion{ color:var(--primary-dark); background:#DCFCE7; border-color:#BBF7D0; }
+  .cat-chip.boleta{ color:var(--amber-dark); background:#FEF3C7; border-color:#FDE68A; }
+  .cat-chip.comparacion{ color:var(--sky-dark); background:#E0F2FE; border-color:#BAE6FD; }
+
+  .question-text{ font-family:var(--font-display); font-weight:700; font-size:clamp(17px,2.7vw,21px); line-height:1.45; color:var(--ink); }
+
+  .options-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr)); gap:14px; margin-top:24px; }
+  .option-btn{
+    background:var(--card); border:2px solid var(--border); color:var(--ink); border-radius:16px;
+    padding:16px 18px; font-size:15.5px; font-weight:700; font-family:var(--font-mono); text-align:left; line-height:1.4;
+    box-shadow:0 5px 0 var(--border), 0 10px 14px -8px rgba(4,40,30,.18);
+    transition:transform .1s ease, box-shadow .1s ease, border-color .15s ease, background .15s ease;
+    display:flex; align-items:center; gap:13px; min-height:58px;
+    opacity:0; animation:optIn .4s ease forwards;
+  }
+  @keyframes optIn{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
+  .option-btn:hover:not(:disabled){ border-color:var(--primary); transform:translateY(-2px); }
+  .option-btn:active:not(:disabled){ transform:translateY(3px); box-shadow:0 2px 0 var(--border), 0 4px 8px -4px rgba(4,40,30,.15); }
+  .option-btn:disabled{ cursor:default; }
+  .option-letter{
+    font-family:var(--font-display); font-weight:800; font-size:14px; width:30px; height:30px; border-radius:50%;
+    background:var(--card2); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; color:var(--primary-dark); box-shadow:0 2px 0 var(--border);
+  }
+  .option-btn.correct{ border-color:var(--success); background:#EAFBF1; box-shadow:0 5px 0 #BBEDCE, 0 10px 14px -8px rgba(21,128,61,.25); animation:optPop .4s ease; }
+  .option-btn.correct .option-letter{ background:var(--success); color:#fff; border-color:var(--success-dark); }
+  .option-btn.incorrect{ border-color:var(--danger); background:#FDECEC; animation:shake .35s ease; box-shadow:0 5px 0 #F7C9C9; }
+  .option-btn.incorrect .option-letter{ background:var(--danger); color:#fff; border-color:var(--danger-dark); }
+  .option-btn.dim{ opacity:.42 !important; }
+  @keyframes optPop{ 0%{ transform:scale(1);} 45%{ transform:scale(1.03);} 100%{ transform:scale(1);} }
+  @keyframes shake{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-7px); } 75%{ transform:translateX(7px); } }
+  .card.shake-card{ animation:cardShake .4s ease; }
+  @keyframes cardShake{ 0%,100%{ transform:translateX(0);} 20%{ transform:translateX(-6px);} 40%{ transform:translateX(6px);} 60%{ transform:translateX(-4px);} 80%{ transform:translateX(4px);} }
+
+  .feedback-panel{ margin-top:22px; padding:16px 18px; border-radius:16px; display:flex; gap:12px; align-items:flex-start; animation:fadeIn .35s ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+  .feedback-panel.ok{ background:#EAFBF1; border:2px solid #BBEDCE; }
+  .feedback-panel.bad{ background:#FDECEC; border:2px solid #F7C9C9; }
+  .feedback-icon{ font-size:20px; line-height:1; }
+  .feedback-title{ font-weight:800; font-family:var(--font-display); font-size:15.5px; margin-bottom:3px; }
+  .feedback-panel.ok .feedback-title{ color:var(--success-dark); }
+  .feedback-panel.bad .feedback-title{ color:var(--danger-dark); }
+  .feedback-text{ font-size:13.5px; color:var(--ink-soft); line-height:1.5; }
+  .points-badge{ margin-left:auto; font-family:var(--font-mono); font-weight:700; font-size:13.5px; padding:5px 11px; border-radius:8px; white-space:nowrap; }
+  .feedback-panel.ok .points-badge{ background:#CFF3DC; color:var(--success-dark); }
+  .feedback-panel.bad .points-badge{ background:#F9D4D4; color:var(--danger-dark); }
+
+  .next-row{ margin-top:22px; display:flex; justify-content:flex-end; }
+
+  /* ---------- END SCREEN ---------- */
+  .end-screen{ text-align:center; padding:6px 4px 2px; }
+  .end-medal{ width:68px; height:68px; margin:0 auto 10px; }
+  .end-score{ font-family:var(--font-display); font-weight:800; font-size:56px; color:var(--primary); line-height:1; margin:6px 0 2px; }
+  .end-score-label{ font-family:var(--font-mono); color:var(--muted); font-size:12px; letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px;}
+  .end-message{ font-size:15px; color:var(--ink-soft); margin-bottom:28px; max-width:440px; margin-left:auto; margin-right:auto; line-height:1.6; }
+  .end-summary{ display:flex; justify-content:center; gap:14px; margin-bottom:28px; flex-wrap:wrap; }
+  .end-summary-item{ background:var(--card2); border:1.5px solid var(--border); border-radius:16px; padding:16px 22px; min-width:120px; box-shadow:0 4px 0 var(--border); }
+  .end-summary-num{ font-family:var(--font-display); font-weight:800; font-size:27px; }
+  .end-summary-label{ font-family:var(--font-mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:2px; }
+  .end-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  #confetti-layer{ position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50; }
+  .confetto{ position:absolute; top:-10px; font-size:17px; line-height:1; animation:fall 1150ms cubic-bezier(.25,.46,.45,.94) forwards; }
+  @keyframes fall{ to{ transform:translateY(160px) rotate(300deg); opacity:0; } }
+  .flash-overlay{ position:fixed; inset:0; pointer-events:none; z-index:40; opacity:0; }
+  .flash-overlay.ok{ background:radial-gradient(circle at 50% 40%, rgba(34,197,94,.3), transparent 65%); animation:flashPulse .6s ease-out forwards; }
+  .flash-overlay.bad{ background:radial-gradient(circle at 50% 40%, rgba(239,68,68,.25), transparent 65%); animation:flashPulse .6s ease-out forwards; }
+  @keyframes flashPulse{ 0%{ opacity:1; } 100%{ opacity:0; } }
+
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; } }
+
+  @media (max-width:560px){
+    .rules{ grid-template-columns:1fr; }
+    .card{ padding:24px; border-radius:20px; }
+    .options-grid{ grid-template-columns:1fr; }
+    .die-stage{ width:96px; height:96px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="floaters">
+  <div class="float-shape fs-coin f1"><span>$</span></div>
+  <div class="float-shape fs-bill f2"></div>
+  <div class="float-shape fs-coin f3"><span>$</span></div>
+  <div class="float-shape fs-badge f4"><span>%</span></div>
+  <div class="float-shape fs-bill f5"></div>
+  <div class="float-shape fs-coin f6"><span>$</span></div>
+</div>
+
+<div id="confetti-layer"></div>
+
+<div class="app">
+
+  <div class="topbar hidden" id="topbar">
+    <div class="brand-chip"><span class="dot3d"></span><b>¿Cuánto Me Queda?</b></div>
+    <div class="stat-row">
+      <div class="stat-pill">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 4h3a1 1 0 011 1v2a4 4 0 01-4 4h-.26A6 6 0 0113 15.9V18h2a1 1 0 010 2H9a1 1 0 010-2h2v-2.1A6 6 0 017.26 11H7a4 4 0 01-4-4V5a1 1 0 011-1h3V3a1 1 0 011-1h8a1 1 0 011 1v1zM7 6H5v1a2 2 0 002 2V6zm10 0v3a2 2 0 002-2V6h-2z"/></svg>
+        <span id="scoreVal">0</span>
+      </div>
+      <div class="stat-pill"><span id="roundVal">0/7</span></div>
+    </div>
+  </div>
+
+  <div class="card" id="mainCard">
+
+    <!-- START -->
+    <div class="start-screen" id="startScreen">
+      <div class="eyebrow">Educación Financiera · 3° Medio</div>
+      <h1 class="title">¿Cuánto Me <span class="title-accent">Queda?</span></h1>
+      <p class="subtitle">Sueldo y boleta de honorarios con las tasas vigentes en 2026. Sale el dado, se sortea quién responde, y al tiro aparece el cálculo. Así hasta completar las 7 rondas.</p>
+
+      <div class="rules">
+        <div class="rule-item"><span class="ric">🎲</span><b>Dado del curso</b><span class="sub">sin repetir estudiante</span></div>
+        <div class="rule-item"><span class="ric">🧮</span><b>Puro cálculo</b><span class="sub">sin tiempo límite</span></div>
+        <div class="rule-item"><span class="ric">🏆</span><b>7 rondas</b><span class="sub">sueldo y boleta 2026</span></div>
+      </div>
+
+      <button class="btn-3d" id="startBtn">Comenzar</button>
+      <div class="start-foot">7 preguntas de cálculo</div>
+      <div class="start-credit">Creado por la Profesora Aylen Pereira</div>
+    </div>
+
+    <!-- ROUND (dice + reveal) -->
+    <div class="hidden round-screen" id="roundScreen">
+      <div class="round-badge" id="roundBadge">Ronda 1 de 7</div>
+      <div class="dice-label">Toca lanzar el dado</div>
+      <div class="die-stage">
+        <div class="die" id="die">
+          <div class="die-face face-front" data-n="1"></div>
+          <div class="die-face face-back" data-n="6"></div>
+          <div class="die-face face-right" data-n="2"></div>
+          <div class="die-face face-left" data-n="5"></div>
+          <div class="die-face face-top" data-n="3"></div>
+          <div class="die-face face-bottom" data-n="4"></div>
+        </div>
+      </div>
+      <button class="btn-3d amber" id="rollDiceBtn">Lanzar el dado</button>
+      <div class="reveal-card" id="revealCard">
+        <div class="reveal-label">Le toca responder a</div>
+        <div class="reveal-name" id="revealName">—</div>
+      </div>
+      <p class="dice-pool-note" id="dicePoolNote">39 de 39 estudiantes disponibles</p>
+      <div class="round-toast" id="roundToast">✦ ¡Vuelta completa! Todo el curso ha participado. Reiniciando la lista…</div>
+      <div class="round-actions">
+        <button class="btn-3d sky hidden" id="goToQuestionBtn">Ver el cálculo →</button>
+      </div>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="hidden" id="questionScreen">
+      <div class="qtop">
+        <span class="cat-chip" id="catChip"></span>
+        <span class="round-badge" id="qRoundBadge">Ronda 1 de 7</span>
+      </div>
+
+      <div class="question-text" id="questionText"></div>
+
+      <div class="options-grid" id="optionsGrid"></div>
+
+      <div class="hidden" id="feedbackPanel"></div>
+
+      <div class="next-row hidden" id="nextRow">
+        <button class="btn-3d" id="nextBtn">Siguiente ronda <span id="nextArrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- END -->
+    <div class="hidden end-screen" id="endScreen">
+      <svg class="end-medal" id="endMedalSvg" viewBox="0 0 64 64" fill="none"></svg>
+      <div class="end-score" id="endScore">0</div>
+      <div class="end-score-label">puntos totales</div>
+      <div class="end-message" id="endMessage"></div>
+
+      <div class="end-summary">
+        <div class="end-summary-item">
+          <div class="end-summary-num" style="color:var(--success)" id="sumCorrect">0</div>
+          <div class="end-summary-label">Correctas</div>
+        </div>
+        <div class="end-summary-item">
+          <div class="end-summary-num" style="color:var(--danger)" id="sumWrong">0</div>
+          <div class="end-summary-label">Incorrectas</div>
+        </div>
+        <div class="end-summary-item">
+          <div class="end-summary-num" style="color:var(--amber-dark)" id="sumPct">0%</div>
+          <div class="end-summary-label">Logro del curso</div>
+        </div>
+      </div>
+
+      <div class="end-actions">
+        <button class="btn-3d" id="replayBtn">Jugar de nuevo</button>
+      </div>
+      <div class="start-credit" style="margin-top:22px;">Creado por la Profesora Aylen Pereira</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+
+  /* =========================================================
+     LISTA DE ESTUDIANTES
+  ========================================================== */
+  const STUDENTS = [
+    'Aguilera Lagos Isidora', 'Avila Fica Josefa', 'Carril Bastias Maximiliano', 'Colque Silva Martina',
+    'Contreras Medina Laurita', 'Cornejo Ramirez Matías', 'Farias Cuevas Javier', 'Faundez Rivera Paula',
+    'González Beniítez Emilia', 'Gonzalez Figueroa Sofia', 'González Hernández Valentina', 'Gonzalez Metuaze Claudio Said',
+    'Gutierrez Silva Juan Ignacio', 'Ibañez Chamblas Sebastian', 'Jimenez Garces Emilia', 'Leiton Inostroza Fernanda',
+    'Maldonado Chamorro Marlys', 'Martínez Guzman Antonella', 'Martínez Martínez Mariano', 'Martínez Sanhueza Javiera',
+    'Medina Aravena Javier', 'Mercado Faúndez Amanda', 'Montecinos Guzman Maria Ignacia', 'Navarro Monsalvez Vicente',
+    'Pastrana Toloza Franco', 'Pinto Flores Cristobal', 'Provoste Hidalgo Maite', 'Rifo Reyes Jonathan',
+    'Rodriguez Astorga Vicente', 'Rojas Fica Branco', 'Salazar Chamorro David', 'Sanhueza Faúndez Guliana',
+    'Sepúlveda Salgado Emilio', 'Silva Lagos Agustina', 'Toledo Martínez Oscar', 'Torres Guzman Daniela',
+    'Venegas Castro Francisco', 'Villagra Villegas Benjamín', 'Zambrano Maturana Agustin'
+  ];
+
+  /* =========================================================
+     BANCO DE PREGUNTAS — 7 cálculos
+     (Liquidación de sueldo y Boleta de Honorarios, tasas 2026)
+  ========================================================== */
+  const QUESTIONS = [
+    { tipo:'Liquidación de sueldo', q:'Un trabajador dependiente tiene un sueldo bruto imponible de $800.000. La cotización obligatoria de AFP es 10%. ¿Cuánto es el descuento por AFP?',
+      opts:[{t:'$56.000',c:false},{t:'$80.000',c:true},{t:'$4.800',c:false},{t:'$24.000',c:false}],
+      ex:'800.000 × 0,10 = $80.000.' },
+    { tipo:'Boleta de honorarios', q:'Un trabajador independiente emite una boleta de honorarios por $500.000 en 2026. La tasa de retención del SII es 15,25%. ¿Cuánto retiene el SII?',
+      opts:[{t:'$76.250',c:true},{t:'$61.250',c:false},{t:'$50.000',c:false},{t:'$85.000',c:false}],
+      ex:'500.000 × 0,1525 = $76.250 (el líquido a recibir sería $423.750).' },
+    { tipo:'Liquidación de sueldo', q:'Sueldo bruto imponible de $1.000.000. Se descuentan AFP (10%), salud (7%) y seguro de cesantía del trabajador (0,6%). ¿Cuál es el sueldo líquido?',
+      opts:[{t:'$770.000',c:false},{t:'$824.000',c:true},{t:'$880.000',c:false},{t:'$814.000',c:false}],
+      ex:'Total descuentos = 17,6% de 1.000.000 = $176.000 → líquido = 1.000.000 − 176.000 = $824.000.' },
+    { tipo:'Liquidación de sueldo', q:'Sueldo bruto imponible de $750.000. La cotización de salud (Fonasa) es 7%. ¿Cuánto es el descuento por salud?',
+      opts:[{t:'$75.000',c:false},{t:'$52.500',c:true},{t:'$4.500',c:false},{t:'$22.500',c:false}],
+      ex:'750.000 × 0,07 = $52.500.' },
+    { tipo:'Boleta de honorarios', q:'Una boleta de honorarios de $350.000 se emite en 2026, con retención de 15,25%. ¿Cuál es el líquido a recibir?',
+      opts:[{t:'$307.125',c:false},{t:'$296.625',c:true},{t:'$332.500',c:false},{t:'$280.000',c:false}],
+      ex:'350.000 × 0,1525 = $53.375 retenidos → líquido = 350.000 − 53.375 = $296.625.' },
+    { tipo:'Liquidación de sueldo', q:'Contrato indefinido, sueldo bruto imponible $900.000. El seguro de cesantía que paga el propio trabajador es 0,6%. ¿Cuánto es ese descuento?',
+      opts:[{t:'$54.000',c:false},{t:'$27.000',c:false},{t:'$5.400',c:true},{t:'$7.200',c:false}],
+      ex:'900.000 × 0,006 = $5.400.' },
+    { tipo:'Comparación', q:'Dos personas ganan $600.000 brutos: una como trabajador dependiente (descuentan AFP 10% + salud 7% + cesantía 0,6% = 17,6%) y otra emite boleta de honorarios (retención 15,25%). ¿Cuánto más recibe líquido la persona de la boleta de honorarios respecto a la dependiente?',
+      opts:[{t:'$14.100',c:true},{t:'$25.000',c:false},{t:'$5.400',c:false},{t:'$19.800',c:false}],
+      ex:'Dependiente: líquido = 600.000 − 105.600 = $494.400. Boleta: líquido = 600.000 − 91.500 = $508.500. Diferencia = $14.100.' }
+  ];
+
+  /* =========================================================
+     ESTADO
+  ========================================================== */
+  const TOTAL_ROUNDS = QUESTIONS.length;
+  const POINTS_PER_CORRECT = 100;
+
+  let order = [];
+  let round = 0;
+  let score = 0;
+  let answered = false;
+  let correctCount = 0;
+  let wrongCount = 0;
+  let studentPool = [];
+  let currentOpts = null;
+
+  /* =========================================================
+     HELPERS
+  ========================================================== */
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+  function resetStudentPool(){ studentPool = shuffle(STUDENTS.map((_,i)=>i)); }
+
+  /* =========================================================
+     PUNTOS (PIPS) DEL DADO 3D
+  ========================================================== */
+  const PIP_PATTERNS = {
+    1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8]
+  };
+  function dieFaceInner(n){
+    const filled = new Set(PIP_PATTERNS[n] || []);
+    let html = '';
+    for(let i=0;i<9;i++){ html += filled.has(i) ? '<span class="pip"></span>' : '<span></span>'; }
+    return html;
+  }
+  function initDieFaces(){
+    document.querySelectorAll('.die-face').forEach(face=>{
+      const n = parseInt(face.getAttribute('data-n'), 10);
+      face.innerHTML = dieFaceInner(n);
+    });
+  }
+
+  /* =========================================================
+     SONIDO
+  ========================================================== */
+  let audioCtx = null;
+  function getAudioCtx(){
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      audioCtx = new AC();
+    }
+    if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
+    return audioCtx;
+  }
+  function beep(freq, duration, type, delay, peakGain){
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    osc.connect(gain); gain.connect(ctx.destination);
+    const t0 = ctx.currentTime + delay;
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(peakGain, t0 + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+    osc.start(t0); osc.stop(t0 + duration + 0.02);
+  }
+  function playCorrectSound(){ beep(523.25,0.12,'sine',0,0.13); beep(659.25,0.14,'sine',0.1,0.12); beep(880,0.24,'sine',0.2,0.14); }
+  function playWrongSound(){ beep(220,0.1,'sine',0,0.1); beep(174.6,0.26,'sine',0.08,0.1); }
+  function playDiceTick(){ beep(500 + Math.random()*120,0.035,'triangle',0,0.045); }
+  function playDiceLand(){ beep(160,0.16,'sine',0,0.12); beep(660,0.2,'sine',0.04,0.1); beep(990,0.18,'sine',0.1,0.08); }
+  function playFinish(){ [523,659,784,1046,1318].forEach((n,i)=> beep(n, 0.22, 'triangle', i*0.13, 0.13)); }
+
+  /* =========================================================
+     DECORACIONES / CONFETI
+  ========================================================== */
+  function spawnSparkles(){
+    if(prefersReduced) return;
+    const layer = $('confetti-layer');
+    const marks = ['✦','✧','★','●'];
+    const colors = ['#059669','#0EA5E9','#F59E0B','#22C55E','#34D399'];
+    for(let i=0;i<18;i++){
+      const s = document.createElement('span');
+      s.className = 'confetto';
+      s.textContent = marks[Math.floor(Math.random()*marks.length)];
+      s.style.color = colors[Math.floor(Math.random()*colors.length)];
+      s.style.left = (38 + Math.random()*24) + 'vw';
+      s.style.top = (24 + Math.random()*14) + 'vh';
+      s.style.transform = `rotate(${Math.random()*360}deg)`;
+      s.style.animationDuration = (850 + Math.random()*600) + 'ms';
+      layer.appendChild(s);
+      setTimeout(()=> s.remove(), 1600);
+    }
+  }
+  function flashScreen(kind){
+    if(prefersReduced) return;
+    const f = document.createElement('div');
+    f.className = 'flash-overlay ' + kind;
+    document.body.appendChild(f);
+    setTimeout(()=> f.remove(), 650);
+  }
+  function shakeCard(){
+    if(prefersReduced) return;
+    const card = $('mainCard');
+    card.classList.remove('shake-card'); void card.offsetWidth; card.classList.add('shake-card');
+  }
+
+  /* =========================================================
+     DOM refs
+  ========================================================== */
+  const $ = id => document.getElementById(id);
+  const startScreen = $('startScreen'), roundScreen = $('roundScreen'), questionScreen = $('questionScreen'), endScreen = $('endScreen');
+  const topbar = $('topbar');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  $('startBtn').addEventListener('click', startGame);
+  $('replayBtn').addEventListener('click', startGame);
+  $('nextBtn').addEventListener('click', nextRound);
+  $('rollDiceBtn').addEventListener('click', rollDice);
+  $('goToQuestionBtn').addEventListener('click', showQuestion);
+
+  initDieFaces();
+
+  function startGame(){
+    getAudioCtx();
+    order = shuffle(QUESTIONS.map((_,i)=>i));
+    round = 0; score = 0; correctCount = 0; wrongCount = 0;
+    resetStudentPool();
+    $('scoreVal').textContent = '0';
+
+    startScreen.classList.add('hidden');
+    endScreen.classList.add('hidden');
+    questionScreen.classList.add('hidden');
+    topbar.classList.remove('hidden');
+
+    beginRound();
+  }
+
+  function updateTopbar(){
+    $('roundVal').textContent = `${round}/${TOTAL_ROUNDS}`;
+  }
+
+  /* =========================================================
+     RONDA: DADO
+  ========================================================== */
+  let cumX = 0, cumY = 0;
+  let diceSpinning = false;
+
+  function beginRound(){
+    updateTopbar();
+    questionScreen.classList.add('hidden');
+    roundScreen.classList.remove('hidden');
+    $('roundBadge').textContent = `Ronda ${round+1} de ${TOTAL_ROUNDS}`;
+    $('revealCard').classList.remove('show');
+    $('goToQuestionBtn').classList.add('hidden');
+    $('rollDiceBtn').classList.remove('hidden');
+    $('rollDiceBtn').disabled = false;
+    $('roundToast').classList.remove('show');
+    updatePoolNote();
+  }
+
+  function updatePoolNote(){
+    $('dicePoolNote').textContent = `${studentPool.length} de ${STUDENTS.length} estudiantes disponibles`;
+  }
+
+  function rollDice(){
+    if(diceSpinning) return;
+    getAudioCtx();
+    diceSpinning = true;
+    $('rollDiceBtn').disabled = true;
+    $('revealCard').classList.remove('show');
+    $('goToQuestionBtn').classList.add('hidden');
+
+    const faces = [ {x:0,y:0}, {x:0,y:180}, {x:0,y:-90}, {x:0,y:90}, {x:-90,y:0}, {x:90,y:0} ];
+    const target = faces[Math.floor(Math.random()*6)];
+    const spinsX = 2 + Math.floor(Math.random()*2);
+    const spinsY = 3 + Math.floor(Math.random()*2);
+    function nextCongruent(cur, t, extraTurns){
+      const delta = ((t - cur) % 360 + 360) % 360;
+      return cur + delta + 360*extraTurns;
+    }
+    cumX = nextCongruent(cumX, target.x, spinsX);
+    cumY = nextCongruent(cumY, target.y, spinsY);
+
+    const die = $('die');
+    die.style.transition = 'transform 1.3s cubic-bezier(.22,.8,.25,1)';
+    die.style.transform = `rotateX(${cumX}deg) rotateY(${cumY}deg)`;
+
+    let ticks = 0;
+    const tickTimer = setInterval(()=>{ playDiceTick(); ticks++; if(ticks>=11){ clearInterval(tickTimer); } }, 115);
+
+    setTimeout(()=>{
+      playDiceLand();
+      if(studentPool.length===0) resetStudentPool();
+      const idx = studentPool.pop();
+      $('revealName').textContent = STUDENTS[idx];
+      $('revealCard').classList.add('show');
+      updatePoolNote();
+      $('goToQuestionBtn').classList.remove('hidden');
+      $('rollDiceBtn').disabled = false;
+      diceSpinning = false;
+      if(studentPool.length===0){ showRoundComplete(); }
+    }, 1350);
+  }
+
+  function showRoundComplete(){
+    const toast = $('roundToast');
+    toast.classList.add('show');
+    setTimeout(()=>{ resetStudentPool(); updatePoolNote(); toast.classList.remove('show'); }, 2600);
+  }
+
+  /* =========================================================
+     PREGUNTA (sin tiempo)
+  ========================================================== */
+  function catClass(tipo){
+    if(tipo === 'Liquidación de sueldo') return 'liquidacion';
+    if(tipo === 'Boleta de honorarios') return 'boleta';
+    return 'comparacion';
+  }
+
+  function showQuestion(){
+    answered = false;
+    roundScreen.classList.add('hidden');
+    const qIdx = order[round];
+    const item = QUESTIONS[qIdx];
+    const opts = shuffle(item.opts);
+    currentOpts = opts;
+
+    $('catChip').textContent = item.tipo;
+    $('catChip').className = 'cat-chip ' + catClass(item.tipo);
+    $('qRoundBadge').textContent = `Ronda ${round+1} de ${TOTAL_ROUNDS}`;
+    $('questionText').textContent = item.q;
+
+    const grid = $('optionsGrid');
+    grid.innerHTML = '';
+    const letters = ['A','B','C','D'];
+    opts.forEach((opt, idx)=>{
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.style.animationDelay = (idx*0.06)+'s';
+      btn.innerHTML = `<span class="option-letter">${letters[idx]}</span><span>${opt.t}</span>`;
+      btn.addEventListener('click', ()=> selectAnswer(opt, btn));
+      grid.appendChild(btn);
+    });
+
+    $('feedbackPanel').className = 'hidden';
+    $('feedbackPanel').innerHTML = '';
+    $('nextRow').classList.add('hidden');
+
+    questionScreen.classList.remove('hidden');
+  }
+
+  function selectAnswer(opt, btnEl){
+    if(answered) return;
+    answered = true;
+    resolveAnswer(opt.c, btnEl);
+  }
+
+  function resolveAnswer(isCorrect, btnEl){
+    const qIdx = order[round];
+    const item = QUESTIONS[qIdx];
+    if(isCorrect){ correctCount++; } else { wrongCount++; }
+
+    const buttons = Array.from($('optionsGrid').children);
+    buttons.forEach((b, i)=>{
+      b.disabled = true;
+      const optData = currentOpts[i];
+      if(optData.c){ b.classList.add('correct'); }
+      else if(b === btnEl){ b.classList.add('incorrect'); }
+      else { b.classList.add('dim'); }
+    });
+
+    let pts = 0;
+    if(isCorrect){
+      pts = POINTS_PER_CORRECT; score += pts;
+      spawnSparkles(); flashScreen('ok'); playCorrectSound();
+    } else {
+      flashScreen('bad'); shakeCard(); playWrongSound();
+    }
+    $('scoreVal').textContent = score;
+
+    const panel = $('feedbackPanel');
+    panel.className = 'feedback-panel ' + (isCorrect ? 'ok' : 'bad');
+    panel.innerHTML = `
+      <div class="feedback-icon">${isCorrect ? '✅' : '❌'}</div>
+      <div>
+        <div class="feedback-title">${isCorrect ? 'Correcto' : 'No es correcto'}</div>
+        <div class="feedback-text">${item.ex}</div>
+      </div>
+      <div class="points-badge">${isCorrect ? '+'+pts+' pts' : '+0 pts'}</div>
+    `;
+
+    $('nextRow').classList.remove('hidden');
+    $('nextBtn').innerHTML = (round+1 >= TOTAL_ROUNDS) ? 'Ver resultado final' : 'Siguiente ronda <span id="nextArrow">→</span>';
+  }
+
+  function nextRound(){
+    round += 1;
+    if(round >= TOTAL_ROUNDS){ renderEnd(); }
+    else { questionScreen.classList.add('hidden'); beginRound(); }
+  }
+
+  /* =========================================================
+     FINAL
+  ========================================================== */
+  const MEDAL_GOLD = `<circle cx="32" cy="32" r="26" fill="url(#g1)" stroke="#B8860B" stroke-width="2"/><circle cx="32" cy="32" r="18" fill="none" stroke="#FFF2C4" stroke-width="2" opacity=".7"/><path d="M32 20l3.5 7.2 7.9 1.1-5.7 5.6 1.3 7.9L32 38l-7 3.8 1.3-7.9-5.7-5.6 7.9-1.1z" fill="#FFF7E0"/>`;
+  const MEDAL_SILVER = `<circle cx="32" cy="32" r="26" fill="url(#g2)" stroke="#8C8C8C" stroke-width="2"/><circle cx="32" cy="32" r="18" fill="none" stroke="#F2F2F2" stroke-width="2" opacity=".7"/><path d="M32 22l2.8 5.8 6.3.9-4.6 4.5 1.1 6.3L32 36.4l-5.6 3.1 1.1-6.3-4.6-4.5 6.3-.9z" fill="#FAFAFA"/>`;
+  const MEDAL_BRONZE = `<circle cx="32" cy="32" r="26" fill="url(#g3)" stroke="#8C5A2B" stroke-width="2"/><circle cx="32" cy="32" r="18" fill="none" stroke="#F3D3AE" stroke-width="2" opacity=".6"/><path d="M32 24l2 4.2 4.6.6-3.3 3.2.8 4.6L32 34.4l-4.1 2.2.8-4.6-3.3-3.2 4.6-.6z" fill="#FBE4C9"/>`;
+  const MEDAL_DEFS = `<defs>
+    <radialGradient id="g1" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#FFE9A8"/><stop offset="100%" stop-color="#E0A526"/></radialGradient>
+    <radialGradient id="g2" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#F3F3F3"/><stop offset="100%" stop-color="#B9B9B9"/></radialGradient>
+    <radialGradient id="g3" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#E6B482"/><stop offset="100%" stop-color="#A86A36"/></radialGradient>
+  </defs>`;
+
+  function renderEnd(){
+    questionScreen.classList.add('hidden');
+    roundScreen.classList.add('hidden');
+    topbar.classList.add('hidden');
+    endScreen.classList.remove('hidden');
+    playFinish();
+    spawnSparkles();
+
+    const pct = Math.round((correctCount/TOTAL_ROUNDS)*100);
+    let medal, msg;
+    if(pct >= 85){ medal = MEDAL_GOLD; msg = 'Dominio sobresaliente del cálculo de sueldo líquido y boleta de honorarios.'; }
+    else if(pct >= 50){ medal = MEDAL_SILVER; msg = 'Buen resultado general. Repasen los cálculos con más errores.'; }
+    else { medal = MEDAL_BRONZE; msg = 'Conviene repasar cómo se calculan los descuentos de la liquidación de sueldo y la retención de la boleta de honorarios.'; }
+
+    $('endMedalSvg').innerHTML = MEDAL_DEFS + medal;
+    $('endMessage').textContent = msg;
+    $('endScore').textContent = '0';
+    $('sumCorrect').textContent = correctCount;
+    $('sumWrong').textContent = wrongCount;
+    $('sumPct').textContent = pct + '%';
+
+    let cur = 0;
+    const step = Math.max(1, Math.round(score/40));
+    const counter = setInterval(()=>{
+      cur += step;
+      if(cur >= score){ cur = score; clearInterval(counter); }
+      $('endScore').textContent = cur;
+    }, 20);
+  }
+
+})();
+</script>
+</body>
+</html>
